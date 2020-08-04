@@ -1,7 +1,14 @@
 <h2>Queue <code>{{ queueHost }}/{{ queueName }}</code></h2>
 
 <h3>{{capitalize state}} Jobs</h3>
-
+<div class="input-group">
+     <span class="input-group-btn">
+         <button id="btnFilter" name="btnFilter" type="button" class="btn btn-success">
+                Filter
+         </button>
+      </span>
+    <input type="text" class="form-control" id="filter" name="filter" placeholder="fieldname === value">
+</div>
 <div class="row pagination-container">
   <div class="col-sm-6">
     {{#unless disablePagination}}
@@ -12,7 +19,7 @@
               class="disabled">
                 <span>&laquo;</span>
             {{else}}
-              ><a href="{{ basePath }}/{{ encodeURI queueHost }}/{{ encodeURI queueName }}/{{ state }}?page={{ subtract currentPage 1 }}&amp;pageSize={{ pageSize }}" aria-label="Previous">
+              ><a href="{{ basePath }}/{{ encodeURI queueHost }}/{{ encodeURI queueName }}/{{ state }}?page={{ subtract currentPage 1 }}&amp;pageSize={{ pageSize }}" +  aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
               </a>
             {{/eq}}
@@ -49,7 +56,7 @@
     <button type="button" data-action="remove" data-queue-name="{{ queueName }}" data-queue-host="{{ queueHost }}" data-queue-state="{{ state }}" class="js-bulk-action btn btn-danger">
       Remove Jobs
     </button>
-    {{#eq state 'failed'}}
+      {{#eq state 'failed'}}
       <button type="button" data-action="retry" data-queue-name="{{ queueName }}" data-queue-host="{{ queueHost }}" data-queue-state="{{ state }}" class="js-bulk-action btn btn-success">
         Retry Jobs
       </button>

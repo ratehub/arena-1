@@ -3,3 +3,10 @@ package-lock.json
 *.DS_Store
 .vscode
 *.tern-port
+.idea/
+.idea/arena-1.iml
+.idea/modules.xml
+.idea/vagrant.xml
+.idea/vcs.xml
+.idea/workspace.xml
+.idea

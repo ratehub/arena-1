@@ -14,6 +14,7 @@
     "handlebars-helpers": "^0.10.0",
     "jsoneditor": "^5.9.6",
     "lodash": "^4.17.15",
+    "safe-eval": "^0.4.1",
     "tablesort": "^5.0.1"
   },
   "devDependencies": {

@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const { BEE_STATES, BULL_STATES } = require('../helpers/queueHelpers');
+const filterJobs = require('./jobFilter');
 
 /**
  * Determines if the requested job state lookup is valid.
@@ -96,7 +97,9 @@ async function _html(req, res) {
     }
 
     jobs = await queue.getJobs(state, page);
-
+    if(req.query.filter){
+      jobs = filterJobs(jobs, req.query.filter);
+    }
     // Filter out Bee jobs that have already been removed by the time the promise resolves
     jobs = jobs.filter((job) => job);
   } else {
