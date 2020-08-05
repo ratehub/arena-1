@@ -1,96 +1,78 @@
-{{#unless displayJobInline}}
-  <h3>{{ this.id }}</h3>
-{{/unless}}
+<html lang="en">
 
-<h5>Actions</h5>
-<button class="btn btn-danger js-remove-job" data-queue-host="{{ queueHost }}" data-queue-name="{{ queueName }}" data-job-id="{{ this.id }}" data-job-state="{{ jobState }}">
-  Remove
-</button>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-{{#if showRetryButton}}
-  <button class="btn btn-success js-retry-job" data-queue-host="{{ queueHost }}" data-queue-name="{{ queueName }}" data-job-id="{{ this.id }}">
-    {{ retryButtonText }}
-  </button>
+    <title>Arena</title>
+
+    {{#if (useCdn)}}
+        <!-- Bootstrap core CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap/3.3.7/css/bootstrap.min.css">
+        <!-- JSON Viewer -->
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    {{else}}
+        <!-- Bootstrap core CSS -->
+        <link rel="stylesheet" href="{{ basePath }}/bootstrap.min.css">
+        <!-- JSON Viewer -->
+        <link rel="stylesheet" href="{{ basePath }}/highlight.default.min.css">
+        <script src="{{ basePath }}/highlight.min.js"></script>
+    {{/if}}
+    <link rel="stylesheet" href="{{ basePath }}/dashboard.css">
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <link rel="stylesheet" href="{{ basePath }}{{ vendorPath }}/jsoneditor.min.css">
+    <link rel="stylesheet" href="{{ basePath }}{{ vendorPath }}/tablesort.css">
+</head>
+
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                    aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{{ basePath }}/">Arena</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div id="navbar" class="col-sm-3 col-md-2 sidebar">
+            <h4>Queue Navigation Tree</h4>
+            <ul class="nav nav-sidebar">
+                {{{block "sidebar"}}}
+            </ul>
+        </div>
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            {{{ body }}}
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="basePath" value="{{ basePath }}">
+{{#if (useCdn)}}
+    <script type="text/javascript" src="//cdn.jsdelivr.net/g/jquery@3.2.1,bootstrap@3.3.7"></script>
+{{else}}
+    <script type="text/javascript" src="{{ basePath }}/jquery.min.js"></script>
+    <script type="text/javascript" src="{{ basePath }}/bootstrap.min.js"></script>
 {{/if}}
 
+<script type="text/javascript" src="{{ basePath }}{{ vendorPath }}/jsoneditor.min.js"></script>
+<script type="text/javascript" src="{{ basePath }}{{ vendorPath }}/tablesort.min.js"></script>
 
-<div class="row">
-  <div class="col-sm-3">
-    <h5>State</h5>
-    {{capitalize jobState}}
-  </div>
+<script type="text/javascript" src="{{ basePath }}/dashboard.js"></script>
+<script>
+        {{{block "script"}}}
+</script>
+</body>
 
-  <div class="col-sm-3">
-    <h5>Timestamp</h5>
-    {{#if this.options.timestamp}}
-      {{moment this.options.timestamp "llll"}}
-    {{/if}}
-    {{#if this.timestamp}}
-      {{moment this.timestamp "llll"}}
-    {{/if}}
-  </div>
-
-  <div class="col-sm-3">
-    <h5>Attempts Made</h5>
-    {{this.attemptsMade}}
-
-    {{#if this.options}}
-      {{length this.options.stacktraces}}
-    {{/if}}
-  </div>
-</div>
-<div class="row">
-  <div class="col-sm-4">
-    <h5>Permalinks</h5>
-    <a href="{{ basePath }}/{{ encodeURI queueHost }}/{{ encodeURI queueName }}/{{ this.id }}" class="btn btn-info">Job {{ this.id }}</a>
-    <a href="{{ basePath }}/{{ encodeURI queueHost }}/{{ encodeURI queueName }}/{{ this.id }}?json=true" class="btn btn-info">JSON</a>
-  </div>
-</div>
-
-{{#unless this.queue.IS_BEE}}
-<h5>Progress</h5>
-<div class="progress">
-  <div class="progress-bar
-              {{#eq jobState 'failed'}}
-              progress-bar-danger
-              {{/eq}}"
-       role="progressbar"
-       aria-valuenow="{{ this._progress }}"
-       aria-valuemin="0"
-       aria-valuemax="100"
-       style="width: {{ this._progress }}%; min-width: 2em;">
-    {{ this._progress }}%
-  </div>
-</div>
-{{/unless}}
-
-{{#if this.returnvalue}}
-<h5>Return Value</h5>
-<pre><code class="json">{{json this.returnvalue true}}</code></pre>
-{{/if}}
-
-{{#if this.failedReason}}
-<h5>Reason for failure</h5>
-<pre><code>{{this.failedReason}}</code></pre>
-{{/if}}
-
-{{#eq jobState 'failed'}}
-  <h5>Stacktraces</h5>
-  {{#if this.options.stacktraces}}
-    {{#each this.options.stacktraces}}
-      <pre>{{ this }}</pre>
-    {{/each}}
-  {{/if}}
-
-  {{#if this.stacktrace}}
-    {{#each this.stacktrace}}
-      <pre>{{ this }}</pre>
-    {{/each}}
-  {{/if}}
-{{/eq}}
-
-<h5>Data</h5>
-<pre><code class="json">{{json this.data true}}</code></pre>
-
-<h5>Logs</h5>
-<pre><code class="json">{{json this.logs true}}</code></pre>
+</html>

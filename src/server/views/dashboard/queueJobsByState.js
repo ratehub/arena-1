@@ -84,6 +84,7 @@ async function _html(req, res) {
 
   const startId = (page - 1) * pageSize;
   const endId = startId + pageSize - 1;
+  const jobFilter = req.query.filter;
 
   let jobs;
   if (queue.IS_BEE) {
@@ -97,8 +98,8 @@ async function _html(req, res) {
     }
 
     jobs = await queue.getJobs(state, page);
-    if(req.query.filter){
-      jobs = filterJobs(jobs, req.query.filter);
+    if(jobFilter){
+      jobs = filterJobs(jobs, jobFilter);
     }
     // Filter out Bee jobs that have already been removed by the time the promise resolves
     jobs = jobs.filter((job) => job);
@@ -135,6 +136,7 @@ async function _html(req, res) {
     pages,
     pageSize,
     lastPage: _.last(pages),
+    jobFilter,
   });
 }
 

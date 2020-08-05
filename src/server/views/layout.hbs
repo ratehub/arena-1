@@ -71,17 +71,6 @@
 
     <script type="text/javascript" src="{{ basePath }}/dashboard.js"></script>
     <script>
-
-        $(document).ready(function() {
-            $("#btnFilter").click(function () {
-                let _filter = $('#filter').val()
-                alert("Value:" + _filter);
-                $("a").each(function () {
-                    $(this).prop('href', $(this).attr('href') + '&filter=' + _filter);
-                });
-                $(location).attr('href', '{{basePath}}/{{ encodeURI queueHost }}/{{ encodeURI queueName }}/{{ state }}?page={{ currentPage  }}&;pageSize={{ pageSize }}' + '&filter=' + _filter);
-            });
-        });
       {{{block "script"}}}
     </script>
   </body>
