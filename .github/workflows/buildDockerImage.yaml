@@ -19,7 +19,7 @@ jobs:
       run: |
         docker build \
         --file Dockerfile \
-        --tag gcr.io/platform-235214/arena:test \
+        --tag gcr.io/platform-235214/arena:${GITHUB_REF/refs\/tags\//} \
         --build-arg VCS_REF=`git rev-parse --short HEAD` \
         --build-arg VERSION=${GITHUB_REF/refs\/tags\//} \
         --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
